@@ -1,64 +1,35 @@
+import { Toaster } from 'react-hot-toast';
+import BookingForm from './components/BookingForm';
+import { HiFolderAdd } from 'react-icons/hi';
+import Modal from './components/Modal';
+import { useState } from 'react';
+
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return (
-    <div className="bg-gray-800 min-h-screen p-5">
-      <header className="flex flex-col items-center justify-center text-2xl text-white mb-8">
-        <b>Kanban Board</b>
+    <div className="bg-gray-800 min-h-screen  overflow-y-hidden">
+      <header className="flex items-center gap-2 justify-between bg-slate-400 px-1 sm:px-6 py-4 border-b-2 w-screen text-white mb-8">
+        <h2 className="text-2xl">Kanban</h2>
+        <button
+          onClick={openModal}
+          className="bg-green-600 text-white px-1 py-2 sm:px-4 sm:py-2 flex items-center hover:bg-green-500 transition-all"
+        >
+          <span>Add booking</span>
+          <HiFolderAdd className="ml-2" />
+        </button>
       </header>
 
       <div className="flex flex-row text-white">
         {/* Form Section */}
-        <div className="flex flex-col gap-4 m-8">
-          <b>Form</b>
-          <div>
-            <label htmlFor="title">Title:</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              className="ml-2 p-1 border rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="ml-2 p-1 border rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="age">Age:</label>
-            <input
-              type="text"
-              id="age"
-              name="age"
-              className="ml-2 p-1 border rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="email">Email:</label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              className="ml-2 p-1 border rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="phone">Phone:</label>
-            <input
-              type="text"
-              id="phone"
-              name="phone"
-              className="ml-2 p-1 border rounded-md"
-            />
-          </div>
-
-          <button className="bg-blue-500 text-white p-2 rounded-md mt-4">
-            Submit
-          </button>
-        </div>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        >
+          <BookingForm />
+        </Modal>
 
         {/* Kanban Board Section */}
         <div className="flex flex-col w-full text-center">
@@ -82,6 +53,27 @@ function App() {
           </div>
         </div>
       </div>
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{
+          margin: '8px'
+        }}
+        toastOptions={{
+          success: {
+            duration: 4000
+          },
+          error: {
+            duration: 5000
+          },
+          style: {
+            fontSize: '16px',
+            padding: '16px 24px',
+            fontWeight: '500',
+            color: 'var(--color-grey-700)'
+          }
+        }}
+      />
     </div>
   );
 }
