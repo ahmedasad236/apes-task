@@ -1,31 +1,38 @@
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import FormInput from './FormInput';
+import { useBookings } from '../contexts/BookingsContext';
 
-function BookingForm() {
+function BookingForm({
+  onSuccess,
+  updateBooking,
+  bookingToUpdate
+}: {
+  onSuccess: () => void;
+  updateBooking?: (id: string, updatedBooking: Partial<Booking>) => void;
+  bookingToUpdate?: Booking;
+}) {
   const {
     register,
     getValues,
     handleSubmit,
-    watch,
     formState: { errors }
   } = useForm<BookingFormData>({
     defaultValues: {
-      name: 'test',
-      email: '',
-      phone: '',
-      age: 10
+      name: bookingToUpdate?.name || '',
+      email: bookingToUpdate?.email || '',
+      phone: bookingToUpdate?.phone || '',
+      type: bookingToUpdate?.type || ('Unclaimed' as BookingType),
+      age: bookingToUpdate?.age || 10
     }
   });
 
-  const name = watch('name');
-
-  useEffect(() => {
-    console.log('Name:', name);
-  }, [name]);
+  const { addBooking } = useBookings();
 
   function submitForm() {
-    console.log(getValues());
+    if (updateBooking && bookingToUpdate) {
+      updateBooking(bookingToUpdate.id, getValues());
+    } else addBooking(getValues());
+    onSuccess();
   }
 
   return (

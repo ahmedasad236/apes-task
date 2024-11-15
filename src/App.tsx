@@ -1,10 +1,24 @@
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import BookingForm from './components/BookingForm';
 import { HiFolderAdd } from 'react-icons/hi';
 import Modal from './components/Modal';
 import { useState } from 'react';
-
+import CategoryContainer from './components/CategoryContainer';
+import { useBookings } from './contexts/BookingsContext';
 function App() {
+  const { filterBookingsByType } = useBookings();
+
+  const unclaimedBookings = filterBookingsByType('Unclaimed' as BookingType);
+  const firstContactBookings = filterBookingsByType(
+    'FirstContact' as BookingType
+  );
+  const preparingWorkOfferBookings = filterBookingsByType(
+    'PreparingWorkOffer' as BookingType
+  );
+  const sentToTherapistBookings = filterBookingsByType(
+    'SentToTherapist' as BookingType
+  );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -28,29 +42,35 @@ function App() {
           isOpen={isModalOpen}
           onClose={closeModal}
         >
-          <BookingForm />
+          <BookingForm
+            onSuccess={() => {
+              setIsModalOpen(false);
+              toast.success('Booking added successfully');
+            }}
+          />
         </Modal>
 
         {/* Kanban Board Section */}
-        <div className="flex flex-col w-full text-center">
-          <div className="flex flex-row h-full justify-between gap-2">
-            <div className="flex-1">
-              <b>Unclaimed</b>
-              <div className="bg-blue-500 border border-white h-full mt-2"></div>
-            </div>
-            <div className="flex-1">
-              <b>First Contact</b>
-              <div className="bg-blue-500 border border-white h-full mt-2"></div>
-            </div>
-            <div className="flex-1">
-              <b>Preparing Work Offer</b>
-              <div className="bg-blue-500 border border-white h-full mt-2"></div>
-            </div>
-            <div className="flex-1">
-              <b>Send to Therapists</b>
-              <div className="bg-blue-500 border border-white h-full mt-2"></div>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 w-full px-4">
+          <CategoryContainer
+            categoryType={'Unclaimed'}
+            bookings={unclaimedBookings}
+          />
+
+          <CategoryContainer
+            categoryType={'First Contact'}
+            bookings={firstContactBookings}
+          />
+
+          <CategoryContainer
+            categoryType={'Preparing Work Offer'}
+            bookings={preparingWorkOfferBookings}
+          />
+
+          <CategoryContainer
+            categoryType={'Sent to Therapist'}
+            bookings={sentToTherapistBookings}
+          />
         </div>
       </div>
       <Toaster
