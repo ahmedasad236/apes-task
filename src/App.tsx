@@ -2,22 +2,46 @@ import toast, { Toaster } from 'react-hot-toast';
 import BookingForm from './components/BookingForm';
 import { HiFolderAdd } from 'react-icons/hi';
 import Modal from './components/Modal';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CategoryContainer from './components/CategoryContainer';
 import { useBookings } from './contexts/BookingsContext';
 function App() {
-  const { filterBookingsByType } = useBookings();
+  const { bookings } = useBookings();
 
-  const unclaimedBookings = filterBookingsByType('Unclaimed' as BookingType);
-  const firstContactBookings = filterBookingsByType(
-    'FirstContact' as BookingType
+  console.log('bookings: ', bookings);
+  const unclaimedBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => booking.type === ('Unclaimed' as BookingType)
+      ),
+    [bookings]
   );
-  const preparingWorkOfferBookings = filterBookingsByType(
-    'PreparingWorkOffer' as BookingType
+  const firstContactBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => booking.type === ('First Contact' as BookingType)
+      ),
+    [bookings]
   );
-  const sentToTherapistBookings = filterBookingsByType(
-    'SentToTherapist' as BookingType
+  const preparingWorkOfferBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => booking.type === ('Preparing Work Offer' as BookingType)
+      ),
+    [bookings]
   );
+  const sentToTherapistBookings = useMemo(
+    () =>
+      bookings.filter(
+        (booking) => booking.type === ('Sent to Therapist' as BookingType)
+      ),
+    [bookings]
+  );
+
+  console.log('unclaimedBookings: ', unclaimedBookings);
+  console.log('firstContactBookings: ', firstContactBookings);
+  console.log('preparingWorkOfferBookings: ', preparingWorkOfferBookings);
+  console.log('sentToTherapistBookings: ', sentToTherapistBookings);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

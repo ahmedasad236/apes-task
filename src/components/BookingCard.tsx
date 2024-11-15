@@ -16,8 +16,16 @@ function BookingCard({ name, phone, age, email, id, type }: Booking) {
 
   const openEditModal = () => setEditModalOpen(true);
   const closeEditModal = () => setEditModalOpen(false);
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData('bookingId', id); // Pass the booking ID
+  };
   return (
-    <div className="p-4 border rounded-lg shadow-lg bg-slate-900 text-white relative">
+    <div
+      draggable
+      onDragStart={handleDragStart}
+      className="p-4 border rounded-lg shadow-lg bg-slate-900 text-white relative"
+    >
       <header className="flex justify-between items-center">
         <h3 className="text-lg font-bold">{name}</h3>
         <div className="flex gap-2">

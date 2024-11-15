@@ -6,7 +6,6 @@ interface BookingsContextProps {
   addBooking: (booking: Omit<Booking, 'id'>) => void;
   deleteBooking: (id: string) => void;
   updateBooking: (id: string, updatedBooking: Partial<Booking>) => void;
-  filterBookingsByType: (type: BookingType) => Booking[];
 }
 
 const BookingsContext = createContext<BookingsContextProps | undefined>(
@@ -17,19 +16,25 @@ export const BookingsProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
-
+  const [isInitialized, setIsInitialized] = useState(false);
   // Load bookings from localStorage on initial render
   useEffect(() => {
-    const storedBookings = localStorage.getItem('bookings');
-    if (storedBookings) {
-      setBookings(JSON.parse(storedBookings));
+    if (window !== undefined) {
+      const storedBookings = localStorage.getItem('bookings');
+      if (storedBookings) {
+        setBookings(JSON.parse(storedBookings));
+      }
+      setIsInitialized(true);
     }
   }, []);
 
   // Save bookings to localStorage whenever they change
   useEffect(() => {
+    // Ensure localStorage is only updated once boojings are loaded
+    if (!isInitialized) return;
+
     localStorage.setItem('bookings', JSON.stringify(bookings));
-  }, [bookings]);
+  }, [bookings, isInitialized]);
 
   const addBooking = (booking: Omit<Booking, 'id'>) => {
     const newBooking = { ...booking, id: uuidv4() };
@@ -48,18 +53,13 @@ export const BookingsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const filterBookingsByType = (type: BookingType): Booking[] => {
-    return bookings.filter((booking) => booking.type === type);
-  };
-
   return (
     <BookingsContext.Provider
       value={{
         bookings,
         addBooking,
         deleteBooking,
-        updateBooking,
-        filterBookingsByType
+        updateBooking
       }}
     >
       {children}

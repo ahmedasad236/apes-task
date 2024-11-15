@@ -3,7 +3,7 @@ enum BookingType {
   Unclaimed = 'Unclaimed',
   FirstContact = 'First Contact',
   PreparingWorkOffer = 'Preparing Work Offer',
-  SentToTherapist = 'Sent To Therapist'
+  SentToTherapist = 'Sent to Therapist'
 }
 
 interface Booking {
