@@ -8,7 +8,6 @@ import { useBookings } from './contexts/BookingsContext';
 function App() {
   const { bookings } = useBookings();
 
-  console.log('bookings: ', bookings);
   const unclaimedBookings = useMemo(
     () =>
       bookings.filter(
@@ -37,11 +36,6 @@ function App() {
       ),
     [bookings]
   );
-
-  console.log('unclaimedBookings: ', unclaimedBookings);
-  console.log('firstContactBookings: ', firstContactBookings);
-  console.log('preparingWorkOfferBookings: ', preparingWorkOfferBookings);
-  console.log('sentToTherapistBookings: ', sentToTherapistBookings);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
